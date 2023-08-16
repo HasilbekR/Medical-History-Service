@@ -10,7 +10,7 @@ import java.util.UUID;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class DiagnosticTestResult extends BaseEntity{
+public class DiagnosticTestResultEntity extends BaseEntity{
     private UUID patientId;
     private String result;
 }
