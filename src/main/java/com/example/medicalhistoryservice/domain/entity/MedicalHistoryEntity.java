@@ -13,7 +13,7 @@ import java.util.UUID;
 @Getter
 @Setter
 @Builder
-public class MedicalHistory extends BaseEntity{
+public class MedicalHistoryEntity extends BaseEntity{
     private UUID doctorId;
     private UUID patientId;
     private String complaint;
@@ -21,5 +21,5 @@ public class MedicalHistory extends BaseEntity{
     private String diagnosisTests;
     private String treatmentPlan;
     @OneToMany
-    private List<DiagnosticTestResult> diagnosticTestResults;
+    private List<DiagnosticTestResultEntity> diagnosticTestResultEntities;
 }

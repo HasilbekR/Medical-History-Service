@@ -11,7 +11,7 @@ import java.util.UUID;
 @Getter
 @Setter
 @Builder
-public class PhysicalSigns extends BaseEntity{
+public class PhysicalSignsEntity extends BaseEntity{
     private UUID patientId;
     private int bloodGroup;
     private String allergicReactionsTo;
