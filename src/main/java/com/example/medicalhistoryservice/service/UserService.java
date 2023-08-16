@@ -1,6 +1,6 @@
 package com.example.medicalhistoryservice.service;
 
-import com.example.medicalhistoryservice.domain.dto.UserRequestDto;
+import com.example.medicalhistoryservice.domain.dto.UserDetailsRequestDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
@@ -19,10 +19,10 @@ public class UserService {
     private String getUserById;
 
     public String  findUserEmailById(UUID userId) {
-        UserRequestDto userBookingRequestDto = new UserRequestDto(String.valueOf(userId));
+        UserDetailsRequestDto userBookingRequestDto = new UserDetailsRequestDto(String.valueOf(userId));
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.setContentType(MediaType.APPLICATION_JSON);
-        HttpEntity<UserRequestDto> entity = new HttpEntity<>(userBookingRequestDto, httpHeaders);
+        HttpEntity<UserDetailsRequestDto> entity = new HttpEntity<>(userBookingRequestDto, httpHeaders);
         ResponseEntity<String> response = restTemplate.exchange(
                 URI.create(getUserById),
                 HttpMethod.POST,
