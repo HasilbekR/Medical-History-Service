@@ -21,7 +21,7 @@ import java.util.UUID;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/v1/medical-history")
+@RequestMapping("/medical-history/api/v1")
 public class MedicalHistoryController
 {
     private final MedicalHistoryService medicalHistoryService;
