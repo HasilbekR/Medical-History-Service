@@ -11,7 +11,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
@@ -76,7 +75,7 @@ public class MedicalHistoryController
     public List<MedicalHistoryEntity> getDoctorReports(
             @RequestParam UUID doctorId
     ){
-        String patientEmail = userService.findUserEmailById(doctorId);
+        String patientEmail = userService.findDoctorEmailById(doctorId);
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
         // Check if the user is ADMIN
@@ -93,8 +92,7 @@ public class MedicalHistoryController
         }
     }
     public String getEmailFromToken(Authentication authentication) {
-        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-        return userDetails.getUsername();
+        return authentication.getPrincipal().toString();
     }
 
 }

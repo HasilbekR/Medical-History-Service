@@ -10,8 +10,8 @@ import java.util.UUID;
 
 @Repository
 public interface MedicalHistoryRepository extends JpaRepository<MedicalHistoryEntity, UUID> {
-    Optional<List<MedicalHistoryEntity>> findMedicalHistoryEntitiesByPatientId(UUID patientId);
-    Optional<List<MedicalHistoryEntity>> findMedicalHistoryEntitiesByDoctorId(UUID doctorId);
+    Optional<List<MedicalHistoryEntity>> findMedicalHistoryEntitiesByPatientUuid(UUID patientId);
+    Optional<List<MedicalHistoryEntity>> findMedicalHistoryEntitiesByDoctorUuid(UUID doctorId);
 
 
 }

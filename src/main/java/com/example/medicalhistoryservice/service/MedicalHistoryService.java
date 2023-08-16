@@ -31,10 +31,10 @@ public class MedicalHistoryService {
     }
 
     public List<MedicalHistoryEntity> getPatientHistories(UUID patientId){
-        return medicalHistoryRepository.findMedicalHistoryEntitiesByPatientId(patientId).orElseThrow(() -> new DataNotFoundException("Data not found"));
+        return medicalHistoryRepository.findMedicalHistoryEntitiesByPatientUuid(patientId).orElseThrow(() -> new DataNotFoundException("Data not found"));
     }
     public List<MedicalHistoryEntity> getDoctorReports(UUID doctorId){
-        return medicalHistoryRepository.findMedicalHistoryEntitiesByPatientId(doctorId).orElseThrow(() -> new DataNotFoundException("Data not found"));
+        return medicalHistoryRepository.findMedicalHistoryEntitiesByDoctorUuid(doctorId).orElseThrow(() -> new DataNotFoundException("Data not found"));
     }
 
 }

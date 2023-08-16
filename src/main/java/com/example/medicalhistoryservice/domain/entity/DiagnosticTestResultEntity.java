@@ -4,7 +4,7 @@ import jakarta.persistence.Entity;
 import lombok.*;
 
 import java.util.UUID;
-@Entity
+@Entity(name = "test-results")
 @Getter
 @Setter
 @AllArgsConstructor

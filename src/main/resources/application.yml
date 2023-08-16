@@ -3,7 +3,7 @@ server:
 
 spring:
   application:
-    name: MEDICAL-HISYORY-SERVICE
+    name: MEDICAL-HISTORY-SERVICE
   datasource:
     driver-class-name: org.postgresql.Driver
     url: jdbc:postgresql://localhost:5432/history_service_db
@@ -19,6 +19,7 @@ spring:
 
 services:
   get-by-user-id : http://USER-SERVICE/user/api/v1/getById
+  get-by-doctor-id : http://DOCTOR-SERVICE/doctor/api/v1/doctor/getEmailById
 
 
 eureka:

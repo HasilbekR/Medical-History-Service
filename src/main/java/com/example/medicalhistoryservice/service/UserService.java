@@ -17,6 +17,8 @@ public class UserService {
     private final RestTemplate restTemplate;
     @Value("${services.get-by-user-id}")
     private String getUserById;
+    @Value("${services.get-by-doctor-id}")
+    private String getDoctorById;
 
     public String  findUserEmailById(UUID userId) {
         UserDetailsRequestDto userBookingRequestDto = new UserDetailsRequestDto(String.valueOf(userId));
@@ -28,7 +30,19 @@ public class UserService {
                 HttpMethod.POST,
                 entity,
                 String.class);
-        System.out.println(Objects.requireNonNull(response.getBody()));
+        return Objects.requireNonNull(response.getBody());
+    }
+
+    public String  findDoctorEmailById(UUID userId) {
+        UserDetailsRequestDto userBookingRequestDto = new UserDetailsRequestDto(String.valueOf(userId));
+        HttpHeaders httpHeaders = new HttpHeaders();
+        httpHeaders.setContentType(MediaType.APPLICATION_JSON);
+        HttpEntity<UserDetailsRequestDto> entity = new HttpEntity<>(userBookingRequestDto, httpHeaders);
+        ResponseEntity<String> response = restTemplate.exchange(
+                URI.create(getDoctorById),
+                HttpMethod.POST,
+                entity,
+                String.class);
         return Objects.requireNonNull(response.getBody());
     }
 }
