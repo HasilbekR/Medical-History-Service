@@ -71,6 +71,27 @@ public class MedicalHistoryController
             throw new  AuthenticationFailedException("Forbidden user");
         }
     }
+
+    @GetMapping("/get-doctor-reports")
+    public List<MedicalHistoryEntity> getDoctorReports(
+            @RequestParam UUID doctorId
+    ){
+        String patientEmail = userService.findUserEmailById(doctorId);
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        // Check if the user is ADMIN
+        boolean isAdmin = authentication.getAuthorities().stream()
+                .anyMatch(role -> role.getAuthority().equals("ROLE_ADMIN"));
+
+        // Get the user's email from the JWT token
+        String userEmail = getEmailFromToken(authentication);
+
+        if(isAdmin || Objects.equals(patientEmail, userEmail)){
+            return medicalHistoryService.getDoctorReports(doctorId);
+        }else{
+            throw new  AuthenticationFailedException("Forbidden user");
+        }
+    }
     public String getEmailFromToken(Authentication authentication) {
         UserDetails userDetails = (UserDetails) authentication.getPrincipal();
         return userDetails.getUsername();
