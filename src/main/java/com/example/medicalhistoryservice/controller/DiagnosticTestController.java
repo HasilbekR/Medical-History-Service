@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/medical-history/api/v1/test-result")
+@RequestMapping("/medical-history/test-result")
 @RequiredArgsConstructor
 public class DiagnosticTestController {
     private final DiagnosticTestResultService diagnosticTestResultService;
