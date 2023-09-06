@@ -8,7 +8,7 @@ import lombok.*;
 import java.util.List;
 import java.util.UUID;
 
-@Entity(name = "medical-history")
+@Entity(name = "medical_history")
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter

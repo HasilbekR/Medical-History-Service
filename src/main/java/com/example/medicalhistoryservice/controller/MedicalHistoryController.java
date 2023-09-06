@@ -1,6 +1,8 @@
 package com.example.medicalhistoryservice.controller;
 
 import com.example.medicalhistoryservice.domain.dto.MedicalHistoryDto;
+import com.example.medicalhistoryservice.domain.dto.response.StandardResponse;
+import com.example.medicalhistoryservice.domain.dto.response.UserMedHistoryDto;
 import com.example.medicalhistoryservice.domain.entity.DiagnosticTestResultEntity;
 import com.example.medicalhistoryservice.domain.entity.MedicalHistoryEntity;
 import com.example.medicalhistoryservice.exception.AuthenticationFailedException;
@@ -20,7 +22,7 @@ import java.util.UUID;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/medical-history/api/v1")
+@RequestMapping("/medical-history")
 public class MedicalHistoryController
 {
     private final MedicalHistoryService medicalHistoryService;
@@ -51,7 +53,7 @@ public class MedicalHistoryController
     }
 
     @GetMapping("/get-patient-history")
-    public List<MedicalHistoryEntity> getPatientHistory(
+    public StandardResponse<List<UserMedHistoryDto>> getPatientHistory(
             @RequestParam UUID patientId
     ){
         String patientEmail = userService.findUserEmailById(patientId);
@@ -75,7 +77,7 @@ public class MedicalHistoryController
     public List<MedicalHistoryEntity> getDoctorReports(
             @RequestParam UUID doctorId
     ){
-        String patientEmail = userService.findDoctorEmailById(doctorId);
+        String patientEmail = userService.findUserEmailById(doctorId);
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
         // Check if the user is ADMIN
