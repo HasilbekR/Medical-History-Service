@@ -17,7 +17,6 @@ import java.util.UUID;
 public class MedicalHistoryEntity extends BaseEntity{
     private UUID doctorUuid;
     private UUID patientUuid;
-
     @Column(columnDefinition = "text")
     private String complaint;
 

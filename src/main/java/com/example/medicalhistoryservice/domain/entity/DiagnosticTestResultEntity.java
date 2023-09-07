@@ -12,5 +12,7 @@ import java.util.UUID;
 @Builder
 public class DiagnosticTestResultEntity extends BaseEntity{
     private UUID patientId;
+    private String testName;
     private String result;
+    private String hospitalName;
 }

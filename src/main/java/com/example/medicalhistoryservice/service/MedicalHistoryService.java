@@ -23,9 +23,9 @@ import java.util.UUID;
 public class MedicalHistoryService {
     private final MedicalHistoryRepository medicalHistoryRepository;
     private final ModelMapper modelMapper;
-    private final UserService userService;
+    private final DataExchangeService dataExchangeService;
     public StandardResponse<MedicalHistoryEntity> save(MedicalHistoryDto medicalHistoryDto, Principal principal){
-        UUID doctorId = userService.findUserIdByEmail(principal.getName());
+        UUID doctorId = dataExchangeService.findUserIdByEmail(principal.getName());
         MedicalHistoryEntity medicalHistoryEntity = modelMapper.map(medicalHistoryDto, MedicalHistoryEntity.class);
         medicalHistoryEntity.setDoctorUuid(doctorId);
         return StandardResponse.<MedicalHistoryEntity>builder()
@@ -51,7 +51,7 @@ public class MedicalHistoryService {
         List<UserMedHistoryDto> histories = new LinkedList<>();
         List<MedicalHistoryEntity> medicalHistoryEntities = medicalHistoryRepository.findMedicalHistoryEntitiesByPatientUuid(patientId).orElseThrow(() -> new DataNotFoundException("Data not found"));
         for (MedicalHistoryEntity medicalHistoryEntity : medicalHistoryEntities) {
-            DoctorDetailsForBooking doctor = userService.findDoctorNameById(medicalHistoryEntity.getDoctorUuid());
+            DoctorDetailsForBooking doctor = dataExchangeService.findDoctorNameById(medicalHistoryEntity.getDoctorUuid());
             histories.add(UserMedHistoryDto.builder()
                     .id(medicalHistoryEntity.getId())
                     .doctorName(doctor.getFullName())
@@ -71,4 +71,12 @@ public class MedicalHistoryService {
                 .build();
     }
 
+    public StandardResponse<MedicalHistoryEntity> getMedHistory(UUID historyId) {
+        MedicalHistoryEntity medicalHistory = medicalHistoryRepository.findById(historyId).orElseThrow(() -> new DataNotFoundException("Medical history not found"));
+        return StandardResponse.<MedicalHistoryEntity>builder()
+                .status(Status.SUCCESS)
+                .message("Medical History")
+                .data(medicalHistory)
+                .build();
+    }
 }

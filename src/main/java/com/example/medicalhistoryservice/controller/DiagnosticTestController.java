@@ -1,11 +1,14 @@
 package com.example.medicalhistoryservice.controller;
 
 import com.example.medicalhistoryservice.domain.dto.response.StandardResponse;
+import com.example.medicalhistoryservice.domain.dto.response.UserDiagnosticTestDto;
 import com.example.medicalhistoryservice.domain.entity.DiagnosticTestResultEntity;
 import com.example.medicalhistoryservice.service.DiagnosticTestResultService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
 import java.util.List;
 import java.util.UUID;
 
@@ -15,13 +18,15 @@ import java.util.UUID;
 public class DiagnosticTestController {
     private final DiagnosticTestResultService diagnosticTestResultService;
     @PostMapping("/save")
+    @PreAuthorize("hasRole('LAB')")
     public StandardResponse<DiagnosticTestResultEntity> save(
-            @RequestBody DiagnosticTestResultEntity diagnosticTestResultEntity
+            @RequestBody DiagnosticTestResultEntity diagnosticTestResultEntity,
+            Principal principal
     ){
-        return diagnosticTestResultService.save(diagnosticTestResultEntity);
+        return diagnosticTestResultService.save(diagnosticTestResultEntity, principal);
     }
-    @GetMapping("/get")
-    public StandardResponse<List<DiagnosticTestResultEntity>> get(
+    @GetMapping("/get-test-results")
+    public StandardResponse<List<UserDiagnosticTestDto>> get(
             @RequestParam UUID patientId
             ){
         return diagnosticTestResultService.getPatientTestResults(patientId);
@@ -32,5 +37,11 @@ public class DiagnosticTestController {
             @RequestParam UUID resultId
     ){
         return diagnosticTestResultService.update(resultId,diagnosticTestResultEntity);
+    }
+    @GetMapping("/get-test")
+    public StandardResponse<DiagnosticTestResultEntity> getTestResult(
+            @RequestParam UUID resultId
+    ){
+        return diagnosticTestResultService.getTestResult(resultId);
     }
 }

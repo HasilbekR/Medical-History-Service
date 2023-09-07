@@ -19,6 +19,8 @@ spring:
 services:
   get-user-email : http://USER-SERVICE/user/send-email
   get-user-id : http://USER-SERVICE/user/send-id
+  get-hospital-id : http://USER-SERVICE/user/send-hospital-id
+  get-hospital-name : http://HOSPITAL-SERVICE/hospital/send-name
   get-doctor: http://USER-SERVICE/user/send-doctor
 
 
