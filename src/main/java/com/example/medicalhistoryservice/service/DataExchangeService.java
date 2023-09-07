@@ -24,9 +24,10 @@ public class DataExchangeService {
     @Value("${services.get-hospital-id}")
     private String getHospitalId;
     @Value("${services.get-doctor}")
-    private String getHospitalName;
-    @Value("${services.get-hospital-name}")
     private String getUserEntity;
+    @Value("${services.get-hospital-name}")
+    private String getHospitalName;
+
     private final JwtService jwtService;
 
     public String findUserEmailById(UUID userId) {
