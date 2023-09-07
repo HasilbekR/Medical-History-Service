@@ -52,12 +52,14 @@ public class MedicalHistoryService {
         List<MedicalHistoryEntity> medicalHistoryEntities = medicalHistoryRepository.findMedicalHistoryEntitiesByPatientUuid(patientId).orElseThrow(() -> new DataNotFoundException("Data not found"));
         for (MedicalHistoryEntity medicalHistoryEntity : medicalHistoryEntities) {
             DoctorDetailsForBooking doctor = dataExchangeService.findDoctorNameById(medicalHistoryEntity.getDoctorUuid());
+            String hospitalName = dataExchangeService.findHospitalName(doctor.getHospitalId());
             histories.add(UserMedHistoryDto.builder()
                     .id(medicalHistoryEntity.getId())
                     .doctorName(doctor.getFullName())
                     .specialty(doctor.getSpecialty())
                     .complaint(medicalHistoryEntity.getComplaint())
                     .date(medicalHistoryEntity.getCreatedDate().toLocalDate())
+                    .hospitalName(hospitalName)
                     .build());
         }
         return StandardResponse.<List<UserMedHistoryDto>>builder().status(Status.SUCCESS).message("User's medical history data").data(histories).build();

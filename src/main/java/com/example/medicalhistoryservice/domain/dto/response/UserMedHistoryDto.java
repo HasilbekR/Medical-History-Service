@@ -13,5 +13,6 @@ public class UserMedHistoryDto {
     private String specialty;
     private String complaint;
     private LocalDate date;
+    private String hospitalName;
 
 }
