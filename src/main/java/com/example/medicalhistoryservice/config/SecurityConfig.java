@@ -26,6 +26,7 @@ import java.util.List;
 public class SecurityConfig {
     private final AuthenticationService authenticationService;
     private final JwtService jwtService;
+    private final String[] permitAll = {"/swagger-ui/**", "/v3/api-docs/**"};
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -33,7 +34,8 @@ public class SecurityConfig {
                 .cors(Customizer.withDefaults())
                 .csrf().disable()
                 .authorizeHttpRequests((authorize) -> {
-                    authorize.anyRequest().authenticated();
+                    authorize.requestMatchers(permitAll).permitAll()
+                            .anyRequest().authenticated();
                 })
                 .sessionManagement((session) -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .addFilterBefore(new JwtTokenFilter(authenticationService, jwtService),
