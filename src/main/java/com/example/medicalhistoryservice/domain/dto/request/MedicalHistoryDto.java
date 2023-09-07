@@ -1,4 +1,4 @@
-package com.example.medicalhistoryservice.domain.dto;
+package com.example.medicalhistoryservice.domain.dto.request;
 
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
@@ -13,8 +13,6 @@ import java.util.UUID;
 @Getter
 @Setter
 public class MedicalHistoryDto {
-    @NotBlank(message = "Doctor id must not be blank")
-    private UUID doctorUuid;
     @NotBlank(message = "Patient id must not be blank")
     private UUID patientUuid;
     @NotBlank(message = "Patient's complaint must not be blank")

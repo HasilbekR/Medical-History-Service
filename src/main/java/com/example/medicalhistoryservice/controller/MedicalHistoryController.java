@@ -1,6 +1,6 @@
 package com.example.medicalhistoryservice.controller;
 
-import com.example.medicalhistoryservice.domain.dto.MedicalHistoryDto;
+import com.example.medicalhistoryservice.domain.dto.request.MedicalHistoryDto;
 import com.example.medicalhistoryservice.domain.dto.response.StandardResponse;
 import com.example.medicalhistoryservice.domain.dto.response.UserMedHistoryDto;
 import com.example.medicalhistoryservice.domain.entity.DiagnosticTestResultEntity;
@@ -16,6 +16,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
@@ -28,15 +29,16 @@ public class MedicalHistoryController
     private final MedicalHistoryService medicalHistoryService;
     private final UserService userService;
     @PostMapping("/save")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('DOCTOR')")
     public StandardResponse<MedicalHistoryEntity> save(
             @RequestBody MedicalHistoryDto medicalHistoryDto,
+            Principal principal,
             BindingResult bindingResult
             ){
         if(bindingResult.hasErrors()){
             throw new RequestValidationException(bindingResult.getAllErrors());
         }
-        return medicalHistoryService.save(medicalHistoryDto);
+        return medicalHistoryService.save(medicalHistoryDto, principal);
     }
 
     @PostMapping("/set-test-result")

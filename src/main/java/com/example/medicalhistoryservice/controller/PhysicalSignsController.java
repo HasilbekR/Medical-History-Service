@@ -1,6 +1,6 @@
 package com.example.medicalhistoryservice.controller;
 
-import com.example.medicalhistoryservice.domain.dto.PhysicalSignsDto;
+import com.example.medicalhistoryservice.domain.dto.request.PhysicalSignsDto;
 import com.example.medicalhistoryservice.domain.dto.response.StandardResponse;
 import com.example.medicalhistoryservice.domain.entity.PhysicalSignsEntity;
 import com.example.medicalhistoryservice.exception.RequestValidationException;

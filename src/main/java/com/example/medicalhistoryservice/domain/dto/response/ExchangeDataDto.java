@@ -1,4 +1,4 @@
-package com.example.medicalhistoryservice.domain.dto;
+package com.example.medicalhistoryservice.domain.dto.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

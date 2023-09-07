@@ -1,6 +1,6 @@
 package com.example.medicalhistoryservice.service;
 
-import com.example.medicalhistoryservice.domain.dto.PhysicalSignsDto;
+import com.example.medicalhistoryservice.domain.dto.request.PhysicalSignsDto;
 import com.example.medicalhistoryservice.domain.dto.response.StandardResponse;
 import com.example.medicalhistoryservice.domain.dto.response.Status;
 import com.example.medicalhistoryservice.domain.entity.PhysicalSignsEntity;

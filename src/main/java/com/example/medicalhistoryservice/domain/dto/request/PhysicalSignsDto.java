@@ -1,4 +1,4 @@
-package com.example.medicalhistoryservice.domain.dto;
+package com.example.medicalhistoryservice.domain.dto.request;
 
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;

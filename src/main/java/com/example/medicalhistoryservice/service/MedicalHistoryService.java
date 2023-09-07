@@ -1,6 +1,6 @@
 package com.example.medicalhistoryservice.service;
 
-import com.example.medicalhistoryservice.domain.dto.MedicalHistoryDto;
+import com.example.medicalhistoryservice.domain.dto.request.MedicalHistoryDto;
 import com.example.medicalhistoryservice.domain.dto.request.DoctorDetailsForBooking;
 import com.example.medicalhistoryservice.domain.dto.response.StandardResponse;
 import com.example.medicalhistoryservice.domain.dto.response.Status;
@@ -13,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
+import java.security.Principal;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.UUID;
@@ -23,8 +24,10 @@ public class MedicalHistoryService {
     private final MedicalHistoryRepository medicalHistoryRepository;
     private final ModelMapper modelMapper;
     private final UserService userService;
-    public StandardResponse<MedicalHistoryEntity> save(MedicalHistoryDto medicalHistoryDto){
+    public StandardResponse<MedicalHistoryEntity> save(MedicalHistoryDto medicalHistoryDto, Principal principal){
+        UUID doctorId = userService.findUserIdByEmail(principal.getName());
         MedicalHistoryEntity medicalHistoryEntity = modelMapper.map(medicalHistoryDto, MedicalHistoryEntity.class);
+        medicalHistoryEntity.setDoctorUuid(doctorId);
         return StandardResponse.<MedicalHistoryEntity>builder()
                 .status(Status.SUCCESS)
                 .message("Medical history successfully saved")
