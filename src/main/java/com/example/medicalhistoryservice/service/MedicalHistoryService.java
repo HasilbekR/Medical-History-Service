@@ -56,6 +56,7 @@ public class MedicalHistoryService {
         List<MedicalHistoryEntity> medicalHistoryEntities = medicalHistoryRepository.findMedicalHistoryEntitiesByPatientUuidOrderByCreatedDateDesc(patientId, pageable).getContent();
         Long historyNumbers = medicalHistoryRepository.countByPatientUuid(patientId);
         int pagesCount = (int) (historyNumbers/size);
+        if(historyNumbers%size != 0) pagesCount++;
         for (MedicalHistoryEntity medicalHistoryEntity : medicalHistoryEntities) {
             DoctorDetailsForBooking doctor = dataExchangeService.findDoctorNameById(medicalHistoryEntity.getDoctorUuid());
             String hospitalName = dataExchangeService.findHospitalName(doctor.getHospitalId());

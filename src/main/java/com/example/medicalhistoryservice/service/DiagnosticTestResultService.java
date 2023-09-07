@@ -48,6 +48,7 @@ public class DiagnosticTestResultService {
         }
         Long tests = diagnosticTestResultRepository.countByPatientId(patientId);
         int pagesCount = (int) (tests/size);
+        if(tests%size != 0) pagesCount++;
         return StandardResponse.<UserDataForFront>builder()
                 .status(Status.SUCCESS)
                 .message("Patient's diagnostic results")
