@@ -1,6 +1,7 @@
 package com.example.medicalhistoryservice.controller;
 
 import com.example.medicalhistoryservice.domain.dto.response.StandardResponse;
+import com.example.medicalhistoryservice.domain.dto.response.UserDataForFront;
 import com.example.medicalhistoryservice.domain.dto.response.UserDiagnosticTestDto;
 import com.example.medicalhistoryservice.domain.entity.DiagnosticTestResultEntity;
 import com.example.medicalhistoryservice.service.DiagnosticTestResultService;
@@ -26,10 +27,12 @@ public class DiagnosticTestController {
         return diagnosticTestResultService.save(diagnosticTestResultEntity, principal);
     }
     @GetMapping("/get-test-results")
-    public StandardResponse<List<UserDiagnosticTestDto>> get(
-            @RequestParam UUID patientId
+    public StandardResponse<UserDataForFront> get(
+            @RequestParam UUID patientId,
+            @RequestParam(required = false, defaultValue = "0") int page,
+            @RequestParam(required = false, defaultValue = "10") int size
             ){
-        return diagnosticTestResultService.getPatientTestResults(patientId);
+        return diagnosticTestResultService.getPatientTestResults(patientId, page, size);
     }
     @PutMapping("/update")
     public StandardResponse<DiagnosticTestResultEntity> update(

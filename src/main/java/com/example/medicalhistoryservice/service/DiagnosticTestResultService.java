@@ -2,12 +2,15 @@ package com.example.medicalhistoryservice.service;
 
 import com.example.medicalhistoryservice.domain.dto.response.StandardResponse;
 import com.example.medicalhistoryservice.domain.dto.response.Status;
+import com.example.medicalhistoryservice.domain.dto.response.UserDataForFront;
 import com.example.medicalhistoryservice.domain.dto.response.UserDiagnosticTestDto;
 import com.example.medicalhistoryservice.domain.entity.DiagnosticTestResultEntity;
 import com.example.medicalhistoryservice.exception.DataNotFoundException;
 import com.example.medicalhistoryservice.repository.DiagnosticTestResultRepository;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.security.Principal;
@@ -31,8 +34,9 @@ public class DiagnosticTestResultService {
                 .data(diagnosticTestResultRepository.save(diagnosticTestResultEntity))
                 .build();
     }
-    public StandardResponse<List<UserDiagnosticTestDto>> getPatientTestResults(UUID patientId){
-        List<DiagnosticTestResultEntity> testResults = diagnosticTestResultRepository.findDiagnosticTestResultEntitiesByPatientId(patientId).orElseThrow(() -> new DataNotFoundException("Patient not found"));
+    public StandardResponse<UserDataForFront> getPatientTestResults(UUID patientId, int page, int size){
+        Pageable pageable = PageRequest.of(page, size);
+        List<DiagnosticTestResultEntity> testResults = diagnosticTestResultRepository.findDiagnosticTestResultEntitiesByPatientIdOrderByCreatedDateDesc(patientId, pageable).getContent();
         List<UserDiagnosticTestDto> testDtoList = new LinkedList<>();
         for (DiagnosticTestResultEntity testResult : testResults) {
             testDtoList.add(UserDiagnosticTestDto.builder()
@@ -42,10 +46,12 @@ public class DiagnosticTestResultService {
                     .hospitalName(testResult.getHospitalName())
                     .build());
         }
-        return StandardResponse.<List<UserDiagnosticTestDto>>builder()
+        Long tests = diagnosticTestResultRepository.countByPatientId(patientId);
+        int pagesCount = (int) (tests/size);
+        return StandardResponse.<UserDataForFront>builder()
                 .status(Status.SUCCESS)
                 .message("Patient's diagnostic results")
-                .data(testDtoList)
+                .data(UserDataForFront.builder().testResults(testDtoList).pageCount(pagesCount).build())
                 .build();
     }
     public StandardResponse<DiagnosticTestResultEntity> update(UUID resultId, DiagnosticTestResultEntity diagnosticTestResultEntity){

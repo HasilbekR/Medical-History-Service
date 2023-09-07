@@ -2,6 +2,7 @@ package com.example.medicalhistoryservice.controller;
 
 import com.example.medicalhistoryservice.domain.dto.request.MedicalHistoryDto;
 import com.example.medicalhistoryservice.domain.dto.response.StandardResponse;
+import com.example.medicalhistoryservice.domain.dto.response.UserDataForFront;
 import com.example.medicalhistoryservice.domain.dto.response.UserMedHistoryDto;
 import com.example.medicalhistoryservice.domain.entity.DiagnosticTestResultEntity;
 import com.example.medicalhistoryservice.domain.entity.MedicalHistoryEntity;
@@ -54,9 +55,11 @@ public class MedicalHistoryController
         return medicalHistoryService.setTestResult(historyId,result);
     }
 
-    @GetMapping("/get-patient-history")
-    public StandardResponse<List<UserMedHistoryDto>> getPatientHistory(
-            @RequestParam UUID patientId
+    @GetMapping("/get-patient-all-history")
+    public StandardResponse<UserDataForFront> getPatientHistory(
+            @RequestParam UUID patientId,
+            @RequestParam(required = false, defaultValue = "0") int page,
+            @RequestParam(required = false, defaultValue = "10") int size
     ){
         String patientEmail = dataExchangeService.findUserEmailById(patientId);
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -69,7 +72,7 @@ public class MedicalHistoryController
         String userEmail = getEmailFromToken(authentication);
 
         if(isAdmin || Objects.equals(patientEmail, userEmail)){
-            return medicalHistoryService.getPatientHistories(patientId);
+            return medicalHistoryService.getPatientHistories(patientId,page, size);
         }else{
             throw new  AuthenticationFailedException("Forbidden user");
         }

@@ -4,6 +4,7 @@ import com.example.medicalhistoryservice.domain.dto.request.MedicalHistoryDto;
 import com.example.medicalhistoryservice.domain.dto.request.DoctorDetailsForBooking;
 import com.example.medicalhistoryservice.domain.dto.response.StandardResponse;
 import com.example.medicalhistoryservice.domain.dto.response.Status;
+import com.example.medicalhistoryservice.domain.dto.response.UserDataForFront;
 import com.example.medicalhistoryservice.domain.dto.response.UserMedHistoryDto;
 import com.example.medicalhistoryservice.domain.entity.DiagnosticTestResultEntity;
 import com.example.medicalhistoryservice.domain.entity.MedicalHistoryEntity;
@@ -11,6 +12,8 @@ import com.example.medicalhistoryservice.exception.DataNotFoundException;
 import com.example.medicalhistoryservice.repository.MedicalHistoryRepository;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.security.Principal;
@@ -47,9 +50,12 @@ public class MedicalHistoryService {
                 .build();
     }
 
-    public StandardResponse<List<UserMedHistoryDto>> getPatientHistories(UUID patientId){
+    public StandardResponse<UserDataForFront> getPatientHistories(UUID patientId, int page, int size){
+        Pageable pageable = PageRequest.of(page, size);
         List<UserMedHistoryDto> histories = new LinkedList<>();
-        List<MedicalHistoryEntity> medicalHistoryEntities = medicalHistoryRepository.findMedicalHistoryEntitiesByPatientUuid(patientId).orElseThrow(() -> new DataNotFoundException("Data not found"));
+        List<MedicalHistoryEntity> medicalHistoryEntities = medicalHistoryRepository.findMedicalHistoryEntitiesByPatientUuidOrderByCreatedDateDesc(patientId, pageable).getContent();
+        Long historyNumbers = medicalHistoryRepository.countByPatientUuid(patientId);
+        int pagesCount = (int) (historyNumbers/size);
         for (MedicalHistoryEntity medicalHistoryEntity : medicalHistoryEntities) {
             DoctorDetailsForBooking doctor = dataExchangeService.findDoctorNameById(medicalHistoryEntity.getDoctorUuid());
             String hospitalName = dataExchangeService.findHospitalName(doctor.getHospitalId());
@@ -62,7 +68,11 @@ public class MedicalHistoryService {
                     .hospitalName(hospitalName)
                     .build());
         }
-        return StandardResponse.<List<UserMedHistoryDto>>builder().status(Status.SUCCESS).message("User's medical history data").data(histories).build();
+        return StandardResponse.<UserDataForFront>builder()
+                .status(Status.SUCCESS)
+                .message("User's medical history data")
+                .data(UserDataForFront.builder().histories(histories).pageCount(pagesCount).build())
+                .build();
 
     }
     public StandardResponse<List<MedicalHistoryEntity>> getDoctorReports(UUID doctorId){
