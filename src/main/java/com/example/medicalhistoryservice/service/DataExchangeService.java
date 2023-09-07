@@ -15,13 +15,17 @@ import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
-public class UserService {
+public class DataExchangeService {
     private final RestTemplate restTemplate;
     @Value("${services.get-user-email}")
     private String getUserEmail;
     @Value("${services.get-user-id}")
     private String getUserId;
+    @Value("${services.get-hospital-id}")
+    private String getHospitalId;
     @Value("${services.get-doctor}")
+    private String getHospitalName;
+    @Value("${services.get-hospital-name}")
     private String getUserEntity;
     private final JwtService jwtService;
 
@@ -29,7 +33,7 @@ public class UserService {
         ResponseEntity<String> response = restTemplate.exchange(
                 URI.create(getUserEmail),
                 HttpMethod.POST,
-                makeHttpEntity(userId.toString()),
+                makeHttpEntity(userId.toString(), "USER-SERVICE"),
                 String.class);
         return Objects.requireNonNull(response.getBody());
     }
@@ -37,23 +41,40 @@ public class UserService {
         ResponseEntity<UUID> response = restTemplate.exchange(
                 URI.create(getUserId),
                 HttpMethod.POST,
-                makeHttpEntity(email),
+                makeHttpEntity(email, "USER-SERVICE"),
                 UUID.class);
         return Objects.requireNonNull(response.getBody());
     }
+    public UUID findHospitalId(String employeeEmail) {
+        ResponseEntity<UUID> response = restTemplate.exchange(
+                URI.create(getHospitalId),
+                HttpMethod.POST,
+                makeHttpEntity(employeeEmail, "USER-SERVICE"),
+                UUID.class);
+        return Objects.requireNonNull(response.getBody());
+    }
+
     public DoctorDetailsForBooking findDoctorNameById(UUID userId) {
         ResponseEntity<DoctorDetailsForBooking> response = restTemplate.exchange(
                 URI.create(getUserEntity),
                 HttpMethod.POST,
-                makeHttpEntity(userId.toString()),
+                makeHttpEntity(userId.toString(), "USER-SERVICE"),
                 DoctorDetailsForBooking.class);
         return Objects.requireNonNull(response.getBody());
     }
-    public HttpEntity<ExchangeDataDto> makeHttpEntity(String source){
+    public String findHospitalName(UUID hospitalId) {
+        ResponseEntity<String> response = restTemplate.exchange(
+                URI.create(getHospitalName),
+                HttpMethod.POST,
+                makeHttpEntity(hospitalId.toString(), "HOSPITAL-SERVICE"),
+                String.class);
+        return Objects.requireNonNull(response.getBody());
+    }
+    public HttpEntity<ExchangeDataDto> makeHttpEntity(String source, String service){
         ExchangeDataDto exchangeDataDto = new ExchangeDataDto(source);
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.setContentType(MediaType.APPLICATION_JSON);
-        httpHeaders.set("Authorization", "Bearer " + jwtService.generateAccessTokenForService("USER_SERVICE"));
+        httpHeaders.set("Authorization", "Bearer " + jwtService.generateAccessTokenForService(service));
         return new HttpEntity<>(exchangeDataDto, httpHeaders);
     }
 }

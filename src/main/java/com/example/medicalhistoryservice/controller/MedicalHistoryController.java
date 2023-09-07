@@ -8,7 +8,7 @@ import com.example.medicalhistoryservice.domain.entity.MedicalHistoryEntity;
 import com.example.medicalhistoryservice.exception.AuthenticationFailedException;
 import com.example.medicalhistoryservice.exception.RequestValidationException;
 import com.example.medicalhistoryservice.service.MedicalHistoryService;
-import com.example.medicalhistoryservice.service.UserService;
+import com.example.medicalhistoryservice.service.DataExchangeService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
@@ -27,7 +27,7 @@ import java.util.UUID;
 public class MedicalHistoryController
 {
     private final MedicalHistoryService medicalHistoryService;
-    private final UserService userService;
+    private final DataExchangeService dataExchangeService;
     @PostMapping("/save")
     @PreAuthorize("hasRole('DOCTOR')")
     public StandardResponse<MedicalHistoryEntity> save(
@@ -58,7 +58,7 @@ public class MedicalHistoryController
     public StandardResponse<List<UserMedHistoryDto>> getPatientHistory(
             @RequestParam UUID patientId
     ){
-        String patientEmail = userService.findUserEmailById(patientId);
+        String patientEmail = dataExchangeService.findUserEmailById(patientId);
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
         // Check if the user is ADMIN
@@ -74,12 +74,18 @@ public class MedicalHistoryController
             throw new  AuthenticationFailedException("Forbidden user");
         }
     }
+    @GetMapping("/get-med-history")
+    public StandardResponse<MedicalHistoryEntity> getMedHistory(
+            @RequestParam UUID historyId
+    ){
+        return medicalHistoryService.getMedHistory(historyId);
+    }
 
     @GetMapping("/get-doctor-reports")
     public StandardResponse<List<MedicalHistoryEntity>> getDoctorReports(
             @RequestParam UUID doctorId
     ){
-        String patientEmail = userService.findUserEmailById(doctorId);
+        String patientEmail = dataExchangeService.findUserEmailById(doctorId);
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
         // Check if the user is ADMIN
