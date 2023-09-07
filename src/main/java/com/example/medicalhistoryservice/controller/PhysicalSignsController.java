@@ -1,6 +1,7 @@
 package com.example.medicalhistoryservice.controller;
 
 import com.example.medicalhistoryservice.domain.dto.PhysicalSignsDto;
+import com.example.medicalhistoryservice.domain.dto.response.StandardResponse;
 import com.example.medicalhistoryservice.domain.entity.PhysicalSignsEntity;
 import com.example.medicalhistoryservice.exception.RequestValidationException;
 import com.example.medicalhistoryservice.service.PhysicalSignsService;
@@ -17,7 +18,7 @@ public class PhysicalSignsController {
     private final PhysicalSignsService physicalSignsService;
 
     @PostMapping("/save")
-    public PhysicalSignsEntity save(
+    public StandardResponse<PhysicalSignsEntity> save(
             @RequestBody PhysicalSignsDto entity,
             BindingResult bindingResult
     ) {
@@ -28,7 +29,7 @@ public class PhysicalSignsController {
     }
 
     @PutMapping("/update")
-    public PhysicalSignsEntity update(
+    public StandardResponse<PhysicalSignsEntity> update(
             @RequestBody PhysicalSignsDto entity,
             BindingResult bindingResult
     ) {
@@ -39,7 +40,7 @@ public class PhysicalSignsController {
     }
 
     @GetMapping("/get")
-    public PhysicalSignsEntity get(
+    public StandardResponse<PhysicalSignsEntity> get(
             @RequestParam UUID patientId
     ) {
         return physicalSignsService.get(patientId);

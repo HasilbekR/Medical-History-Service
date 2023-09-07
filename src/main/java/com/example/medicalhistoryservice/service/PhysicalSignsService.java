@@ -1,6 +1,8 @@
 package com.example.medicalhistoryservice.service;
 
 import com.example.medicalhistoryservice.domain.dto.PhysicalSignsDto;
+import com.example.medicalhistoryservice.domain.dto.response.StandardResponse;
+import com.example.medicalhistoryservice.domain.dto.response.Status;
 import com.example.medicalhistoryservice.domain.entity.PhysicalSignsEntity;
 import com.example.medicalhistoryservice.exception.DataNotFoundException;
 import com.example.medicalhistoryservice.repository.PhysicalSignsRepository;
@@ -15,16 +17,28 @@ import java.util.UUID;
 public class PhysicalSignsService {
     private final PhysicalSignsRepository physicalSignsRepository;
     private final ModelMapper modelMapper;
-    public PhysicalSignsEntity save(PhysicalSignsDto physicalSignsDto){
+    public StandardResponse<PhysicalSignsEntity> save(PhysicalSignsDto physicalSignsDto){
         PhysicalSignsEntity physicalSigns = modelMapper.map(physicalSignsDto, PhysicalSignsEntity.class);
-        return physicalSignsRepository.save(physicalSigns);
+        return StandardResponse.<PhysicalSignsEntity>builder()
+                .status(Status.SUCCESS)
+                .message("Patient's physical signs successfully saved")
+                .data(physicalSignsRepository.save(physicalSigns))
+                .build();
     }
-    public PhysicalSignsEntity update(PhysicalSignsDto physicalSignsDto){
+    public StandardResponse<PhysicalSignsEntity> update(PhysicalSignsDto physicalSignsDto){
         PhysicalSignsEntity physicalSigns = physicalSignsRepository.findById(physicalSignsDto.getPatientId()).orElseThrow(() -> new DataNotFoundException("Patient not found"));
         modelMapper.map(physicalSignsDto, physicalSigns);
-        return physicalSignsRepository.save(physicalSigns);
+        return StandardResponse.<PhysicalSignsEntity>builder()
+                .status(Status.SUCCESS)
+                .message("Patient's physical signs successfully updated")
+                .data(physicalSignsRepository.save(physicalSigns))
+                .build();
     }
-    public PhysicalSignsEntity get(UUID patientId){
-        return physicalSignsRepository.findPhysicalSignsEntityByPatientId(patientId).orElseThrow(()-> new DataNotFoundException("Patient not found"));
+    public StandardResponse<PhysicalSignsEntity> get(UUID patientId){
+        return StandardResponse.<PhysicalSignsEntity>builder()
+                .status(Status.SUCCESS)
+                .message("Patient's physical signs")
+                .data(physicalSignsRepository.findPhysicalSignsEntityByPatientId(patientId).orElseThrow(()-> new DataNotFoundException("Patient not found")))
+                .build();
     }
 }

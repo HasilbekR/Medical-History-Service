@@ -1,5 +1,7 @@
 package com.example.medicalhistoryservice.service;
 
+import com.example.medicalhistoryservice.domain.dto.response.StandardResponse;
+import com.example.medicalhistoryservice.domain.dto.response.Status;
 import com.example.medicalhistoryservice.domain.entity.DiagnosticTestResultEntity;
 import com.example.medicalhistoryservice.exception.DataNotFoundException;
 import com.example.medicalhistoryservice.repository.DiagnosticTestResultRepository;
@@ -15,15 +17,27 @@ import java.util.UUID;
 public class DiagnosticTestResultService {
     private final DiagnosticTestResultRepository diagnosticTestResultRepository;
     private final ModelMapper modelMapper;
-    public DiagnosticTestResultEntity save(DiagnosticTestResultEntity diagnosticTestResultEntity){
-        return diagnosticTestResultRepository.save(diagnosticTestResultEntity);
+    public StandardResponse<DiagnosticTestResultEntity> save(DiagnosticTestResultEntity diagnosticTestResultEntity){
+        return StandardResponse.<DiagnosticTestResultEntity>builder()
+                .status(Status.SUCCESS)
+                .message("Diagnostic test successfully saved")
+                .data(diagnosticTestResultRepository.save(diagnosticTestResultEntity))
+                .build();
     }
-    public List<DiagnosticTestResultEntity> getPatientTestResults(UUID patientId){
-        return diagnosticTestResultRepository.findDiagnosticTestResultEntitiesByPatientId(patientId).orElseThrow(()-> new DataNotFoundException("Patient not found"));
+    public StandardResponse<List<DiagnosticTestResultEntity>> getPatientTestResults(UUID patientId){
+        return StandardResponse.<List<DiagnosticTestResultEntity>>builder()
+                .status(Status.SUCCESS)
+                .message("Patient's diagnostic results")
+                .data(diagnosticTestResultRepository.findDiagnosticTestResultEntitiesByPatientId(patientId).orElseThrow(()-> new DataNotFoundException("Patient not found")))
+                .build();
     }
-    public DiagnosticTestResultEntity update(UUID resultId, DiagnosticTestResultEntity diagnosticTestResultEntity){
+    public StandardResponse<DiagnosticTestResultEntity> update(UUID resultId, DiagnosticTestResultEntity diagnosticTestResultEntity){
         DiagnosticTestResultEntity result = diagnosticTestResultRepository.findById(resultId).orElseThrow(() -> new DataNotFoundException("Test result not found"));
         modelMapper.map(diagnosticTestResultEntity,result);
-        return diagnosticTestResultRepository.save(result);
+        return StandardResponse.<DiagnosticTestResultEntity>builder()
+                .status(Status.SUCCESS)
+                .message("Diagnostic test result updated")
+                .data(diagnosticTestResultRepository.save(result))
+                .build();
     }
 }

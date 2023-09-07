@@ -23,17 +23,25 @@ public class MedicalHistoryService {
     private final MedicalHistoryRepository medicalHistoryRepository;
     private final ModelMapper modelMapper;
     private final UserService userService;
-    public MedicalHistoryEntity save(MedicalHistoryDto medicalHistoryDto){
+    public StandardResponse<MedicalHistoryEntity> save(MedicalHistoryDto medicalHistoryDto){
         MedicalHistoryEntity medicalHistoryEntity = modelMapper.map(medicalHistoryDto, MedicalHistoryEntity.class);
-        return medicalHistoryRepository.save(medicalHistoryEntity);
+        return StandardResponse.<MedicalHistoryEntity>builder()
+                .status(Status.SUCCESS)
+                .message("Medical history successfully saved")
+                .data(medicalHistoryRepository.save(medicalHistoryEntity))
+                .build();
     }
 
-    public MedicalHistoryEntity setTestResult(UUID historyId, DiagnosticTestResultEntity result){
+    public StandardResponse<MedicalHistoryEntity> setTestResult(UUID historyId, DiagnosticTestResultEntity result){
         MedicalHistoryEntity historyEntity = medicalHistoryRepository.findById(historyId).orElseThrow(() -> new DataNotFoundException("History not found"));
         List<DiagnosticTestResultEntity> diagnosticTestResultEntities = historyEntity.getDiagnosticTestResultEntities();
         diagnosticTestResultEntities.add(result);
         historyEntity.setDiagnosticTestResultEntities(diagnosticTestResultEntities);
-        return medicalHistoryRepository.save(historyEntity);
+        return StandardResponse.<MedicalHistoryEntity>builder()
+                .status(Status.SUCCESS)
+                .message("Diagnostic test successfully saved")
+                .data(medicalHistoryRepository.save(historyEntity))
+                .build();
     }
 
     public StandardResponse<List<UserMedHistoryDto>> getPatientHistories(UUID patientId){
@@ -52,8 +60,12 @@ public class MedicalHistoryService {
         return StandardResponse.<List<UserMedHistoryDto>>builder().status(Status.SUCCESS).message("User's medical history data").data(histories).build();
 
     }
-    public List<MedicalHistoryEntity> getDoctorReports(UUID doctorId){
-        return medicalHistoryRepository.findMedicalHistoryEntitiesByDoctorUuid(doctorId).orElseThrow(() -> new DataNotFoundException("Data not found"));
+    public StandardResponse<List<MedicalHistoryEntity>> getDoctorReports(UUID doctorId){
+        return StandardResponse.<List<MedicalHistoryEntity>>builder()
+                .status(Status.SUCCESS)
+                .message("Doctor's report")
+                .data(medicalHistoryRepository.findMedicalHistoryEntitiesByDoctorUuid(doctorId).orElseThrow(() -> new DataNotFoundException("Data not found")))
+                .build();
     }
 
 }

@@ -29,7 +29,7 @@ public class MedicalHistoryController
     private final UserService userService;
     @PostMapping("/save")
     @PreAuthorize("hasRole('ADMIN')")
-    public MedicalHistoryEntity save(
+    public StandardResponse<MedicalHistoryEntity> save(
             @RequestBody MedicalHistoryDto medicalHistoryDto,
             BindingResult bindingResult
             ){
@@ -41,7 +41,7 @@ public class MedicalHistoryController
 
     @PostMapping("/set-test-result")
     @PreAuthorize("hasRole('LAB')")
-    public MedicalHistoryEntity setResult(
+    public StandardResponse<MedicalHistoryEntity> setResult(
             @RequestBody DiagnosticTestResultEntity result,
             @RequestParam UUID historyId,
             BindingResult bindingResult
@@ -74,7 +74,7 @@ public class MedicalHistoryController
     }
 
     @GetMapping("/get-doctor-reports")
-    public List<MedicalHistoryEntity> getDoctorReports(
+    public StandardResponse<List<MedicalHistoryEntity>> getDoctorReports(
             @RequestParam UUID doctorId
     ){
         String patientEmail = userService.findUserEmailById(doctorId);
