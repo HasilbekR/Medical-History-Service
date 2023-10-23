@@ -2,7 +2,7 @@ server:
   port: 8085
 spring:
   application:
-    name: HOSPITAL-SERVICE
+    name: MEDICAL-HISTORY-SERVICE
   datasource:
     driver-class-name: org.postgresql.Driver
     url: jdbc:postgresql://localhost:5432/medical_history_db
